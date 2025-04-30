@@ -8,7 +8,7 @@ A small Python module that uses a large language model (LLM) to extract and norm
 ## Features
 
 - **Single-step parsing**  
-  Convert phrases like “rich Europe and rich EMEA countries” directly into a flat list of country names.  
+  Converts phrases like “rich Europe and rich EMEA countries” directly into a flat list of country names.  
 - **Configurable LLM backend**  
   Defaults to OpenAI’s API but can be extended to other LLM providers.  
 - **Lightweight dependency**  
@@ -21,7 +21,7 @@ A small Python module that uses a large language model (LLM) to extract and norm
 1. Copy `ParseLocationFromNaturalLanguage.py` into your project.  
 2. Install dependencies:
    ```bash
-   pip install openai
+   pip install ParseLocationFromNaturalLanguage
    ```
 
 ---
@@ -40,64 +40,35 @@ export OPENAI_API_KEY="your-api-key"
 ```python
 from ParseLocationFromNaturalLanguage import llm_based_location_parser
 
-# Parse a natural-language description into individual country names
+# Example 1: return_ISO_NAME_dict=False
 query = "all rich countries in Europe and EMEA"
-countries = llm_based_location_parser(query)
-
+countries = llm_based_location_parser(query, return_ISO_NAME_dict=False, result_language="english")
 print(countries)
-# e.g. ["United Kingdom", "Germany", "France", "Italy", "United Arab Emirates", "Saudi Arabia", ...]
+# -> ["United Kingdom", "Germany", "France", "Italy", "United Arab Emirates", "Saudi Arabia", ...]
+
+# Example 2: return_ISO_NAME_dict=True
+iso_countries = llm_based_location_parser(
+    query,
+    return_ISO_NAME_dict=True,
+    result_language="english"
+)
+print(iso_countries)
+# -> {
+#      "GB": "United Kingdom",
+#      "DE": "Germany",
+#      "FR": "France",
+#      "IT": "Italy",
+#      "AE": "United Arab Emirates",
+#      "SA": "Saudi Arabia",
+#      ...
+#    }
 ```
 
 ---
-
-## API Reference
-
-### `llm_based_location_parser(text: str, model: str = "gpt-4", temperature: float = 0.0) → List[str]`
-
-| Parameter    | Type    | Description                                                                                   |
-| ------------ | ------- | --------------------------------------------------------------------------------------------- |
-| `text`       | `str`   | Free-form region description (e.g. “rich Europe and rich EMEA countries”).                    |
-| `model`      | `str`   | (Optional) LLM model identifier (default: `"gpt-4"`).                                         |
-| `temperature`| `float` | (Optional) Sampling temperature for the LLM (default: `0.0` for deterministic output).       |
 
 **Returns:**  
-- A list of ISO-standard country names matching the described regions.
+- If `return_ISO_NAME_dict=False`, a list of ISO-standard country names.  
+- If `return_ISO_NAME_dict=True`, a dictionary mapping each country’s ISO 3166-1 alpha-2 code to its name.
 
 ---
-
-## Example
-
-```python
-from ParseLocationFromNaturalLanguage import llm_based_location_parser
-
-# Example 1: simple region
-print(llm_based_location_parser("countries in Scandinavia"))
-# -> ["Sweden", "Norway", "Denmark", "Finland", "Iceland"]
-
-# Example 2: qualifier + region
-print(llm_based_location_parser("rich Europe and rich EMEA countries"))
-# -> ["United Kingdom", "Germany", "France", "Italy", "United Arab Emirates", "Saudi Arabia", ...]
-```
-
----
-
-## Customizing
-
-- **Switch LLM provider**  
-  Replace the OpenAI client calls inside `llm_based_location_parser` with your preferred API.  
-- **Region maps**  
-  If you need to override or supplement the LLM’s output, post-process the returned list against your own `REGION_MAP`.
-
----
-
-## Requirements
-
-- Python 3.8+  
-- `openai` (or your chosen SDK)
-
----
-
-## License
-
-MIT © 2025 Your Company Name
 ```
