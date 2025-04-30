@@ -1,4 +1,4 @@
-```markdown
+
 # ParseLocationFromNaturalLanguage
 
 A small Python module that uses a large language model (LLM) to extract and normalize a list of country names from free-form, natural-language region descriptions.
@@ -71,4 +71,3 @@ print(iso_countries)
 - If `return_ISO_NAME_dict=True`, a dictionary mapping each country’s ISO 3166-1 alpha-2 code to its name.
 
 ---
-```
